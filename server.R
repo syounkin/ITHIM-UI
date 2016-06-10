@@ -51,7 +51,7 @@ shinyServer(function(input, output) {
     #        plot(input$muwt)
             comparitiveRisk <- comparitiveRisk()
       #  hist(comparitiveRisk$RR.baseline[[as.character(input$variable)]]$M[,1])
-      plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.75, 1))+ggtitle(as.character(input$variable))
+      plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.7, 1))+ggtitle(as.character(input$variable))
 
   })
 
