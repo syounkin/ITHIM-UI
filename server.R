@@ -27,7 +27,7 @@ shinyServer(function(input, output) {
   # Generate a plot of the requested variable against mpg and only
                                         # include outliers if requested
 #browser()
-    
+
     parameters <- createParameterList(baseline = TRUE)
     means1 <- computeMeanMatrices(parameters)
     quintiles <- getQuintiles(means1)
@@ -41,6 +41,7 @@ shinyServer(function(input, output) {
     parameters <- createParameterList(baseline = FALSE)
     parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
     parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
+    parameters <- setParameter(parName="muws", parValue = input$muws, parList = parameters)
     means2 <- computeMeanMatrices(parameters)
     quintiles <- getQuintiles(means2)
     ITHIM.scenario  <- list( parameters = parameters, means = means2, quintiles = quintiles )
@@ -50,7 +51,7 @@ shinyServer(function(input, output) {
     #        plot(input$muwt)
             comparitiveRisk <- comparitiveRisk()
       #  hist(comparitiveRisk$RR.baseline[[as.character(input$variable)]]$M[,1])
-      plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.75, 1.05))+ggtitle(as.character(input$variable))
+      plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.75, 1))+ggtitle(as.character(input$variable))
 
   })
 
@@ -59,7 +60,7 @@ data <- reactive({
     foo <- comparitiveRisk()
     data.frame(foo$AF[[input$variable]])
     })
-    
+
     output$values <- renderTable({
             data()
               })

@@ -11,14 +11,18 @@ shinyUI(pageWithSidebar(
   sidebarPanel(
     selectInput("variable", "Variable:",
                 list("Depression" = "Depression",
-                     "Dementia" = "Dementia")),
-    sliderInput("muwt", "Mean Walking Time (min per week)):",
-                                min=55, max=200, value=107),
-        sliderInput("muct", "Mean Cycling Time (min per week)):",
-                                min=10, max=200, value=39)
-
-
-#    checkboxInput("outliers", "Show outliers", FALSE)
+                     "Dementia" = "Dementia",
+                     "BreastCancer" = "BreastCancer",
+                     "ColonCancer" = "ColonCancer",
+                     "CVD" = "CVD",
+                     "Diabetes" = "Diabetes")),
+    sliderInput("muwt", "Mean Walking Time (min per week):",
+                min=55, max=200, value=107),
+    sliderInput("muct", "Mean Cycling Time (min per week):",
+                min=10, max=200, value=39),
+    sliderInput("muws", "Mean Walking Speed (mph):",
+                min=2.7, max=5, value=2.8)
+    #checkboxInput("outliers", "Show outliers", FALSE)
   ),
 
   # Show the caption and plot of the requested variable against mpg
@@ -36,5 +40,5 @@ mainPanel(
                   tabPanel("A.F.", tableOutput("values"))
                 )
       )
-  
+
 ))
