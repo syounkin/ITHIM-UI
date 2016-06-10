@@ -57,8 +57,9 @@ shinyServer(function(input, output) {
 
 
 data <- reactive({
-    foo <- comparitiveRisk()
-    data.frame(foo$AF[[input$variable]])
+    CR <- comparitiveRisk()
+     data.frame(CR$AF)
+#    data.frame(CR$AF[[input$variable]])
     })
 
     output$values <- renderTable({
