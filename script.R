@@ -1,4 +1,5 @@
 library("shiny")
-runGitHub( "ITHIM-UI", "syounkin", ref = "devel")
-runGitHub( "ITHIM-UI", "syounkin", ref = "master")
-runApp("~/ITHIM-UI/")
+library("devtools")
+install_github("syounkin/ITHIM")
+library("ITHIM")
+runGitHub( "ITHIM-UI", "syounkin")
