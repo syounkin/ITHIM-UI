@@ -35,7 +35,8 @@ shinyUI(pageWithSidebar(
 
 mainPanel(
         tabsetPanel(
-                  tabPanel("R.R.", plotOutput("ITHIMPlot",height="800px")),
+            tabPanel("R.R.", plotOutput("ITHIMPlot",height="800px")),
+            tabPanel("Means", plotOutput("MeanPlot",height="800px")),
 #                  tabPanel("Summary", verbatimTextOutput("summary")),
                   tabPanel("A.F.", tableOutput("values"))
                 )

@@ -4,65 +4,46 @@ library(ITHIM)
 library(ggplot2)
 library(reshape2)
 
-# We tweak the "am" field to have nicer factor labels. Since this doesn't
-# rely on any user inputs we can do this once at startup and then use the
-# value throughout the lifetime of the application
-#mpgData <- mtcars
-#mpgData$am <- factor(mpgData$am, labels = c("Automatic", "Manual"))
-
-# Define server logic required to plot various variables against mpg
 shinyServer(function(input, output) {
 
-  # Compute the forumla text in a reactive expression since it is
-  # shared by the output$caption and output$mpgPlot expressions
-#  formulaText <- reactive({
-#    paste("mpg ~", input$variable)
-#  })
-
-  # Return the formula text for printing as a caption
- # output$caption <- renderText({
- #   formulaText()
-  #})
-
-  # Generate a plot of the requested variable against mpg and only
-                                        # include outliers if requested
-#browser()
-
     parameters <- createParameterList(baseline = TRUE)
-    means1 <- computeMeanMatrices(parameters)
-    quintiles <- getQuintiles(means1)
-
-    ITHIM.baseline <- list( parameters = parameters, means = means1, quintiles = quintiles )
-
+    means <- computeMeanMatrices(parameters)
+    quintiles <- getQuintiles(means)
+    ITHIM.baseline  <- list( parameters = parameters, means = means, quintiles = quintiles )
 
 
+#    ITHIM.baseline <- list( parameters = parameters ) #, means = means, quintiles = quintiles )
+    ITHIM.scenario <- reactive({
+        parameters <- createParameterList(baseline = FALSE)
+        parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
+        parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
+        parameters <- setParameter(parName="muws", parValue = input$muws, parList = parameters)
+        means <- computeMeanMatrices(parameters)
+        quintiles <- getQuintiles(means)
+        ITHIM.scenario  <- list( parameters = parameters, means = means, quintiles = quintiles )
+    })
 
- comparitiveRisk <- reactive({
-    parameters <- createParameterList(baseline = FALSE)
-    parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
-    parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
-    parameters <- setParameter(parName="muws", parValue = input$muws, parList = parameters)
-    means2 <- computeMeanMatrices(parameters)
-    quintiles <- getQuintiles(means2)
-    ITHIM.scenario  <- list( parameters = parameters, means = means2, quintiles = quintiles )
-    compareModels(ITHIM.baseline,ITHIM.scenario)
-})
+    comparitiveRisk <- reactive({
+        ITHIM.scenario <- ITHIM.scenario()
+        compareModels(ITHIM.baseline,ITHIM.scenario)
+    })
+
     output$ITHIMPlot <- renderPlot({
-    #        plot(input$muwt)
-            comparitiveRisk <- comparitiveRisk()
-      #  hist(comparitiveRisk$RR.baseline[[as.character(input$variable)]]$M[,1])
-      plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.7, 1))+ggtitle(as.character(input$variable))
+        comparitiveRisk <- comparitiveRisk()
+        plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.7, 1))+ggtitle(as.character(input$variable))
+    })
 
-  })
+    output$MeanPlot <- renderPlot({
+        ITHIM.scenario <- ITHIM.scenario()
+        plotMean(ITHIM.baseline$means,ITHIM.scenario$means, var = "meanWalkTime") + ggtitle("Mean Walking Time") + coord_cartesian(ylim = c(0, 240))
+    })
 
-
-data <- reactive({
-    CR <- comparitiveRisk()
-     data.frame(CR$AF)
-#    data.frame(CR$AF[[input$variable]])
+    data <- reactive({
+        CR <- comparitiveRisk()
+        data.frame(CR$AF)
     })
 
     output$values <- renderTable({
-            data()
-              })
+        data()
+    })
 })
