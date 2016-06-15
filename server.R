@@ -11,8 +11,6 @@ shinyServer(function(input, output) {
     quintiles <- getQuintiles(means)
     ITHIM.baseline  <- list( parameters = parameters, means = means, quintiles = quintiles )
 
-
-#    ITHIM.baseline <- list( parameters = parameters ) #, means = means, quintiles = quintiles )
     ITHIM.scenario <- reactive({
         parameters <- createParameterList(baseline = FALSE)
         parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
