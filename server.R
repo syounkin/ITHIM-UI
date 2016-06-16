@@ -13,13 +13,10 @@ shinyServer(function(input, output) {
     list( parameters = parameters, means = means, quintiles = quintiles )
     })
 
-
-#    ITHIM.baseline <- list( parameters = parameters ) #, means = means, quintiles = quintiles )
     ITHIM.scenario <- reactive({
         parameters <- createParameterList(vision = "scenario", region = input$region)
         parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
         parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
-        parameters <- setParameter(parName="muws", parValue = input$muws, parList = parameters)
         means <- computeMeanMatrices(parameters)
         quintiles <- getQuintiles(means)
         ITHIM.scenario  <- list( parameters = parameters, means = means, quintiles = quintiles )
@@ -49,34 +46,25 @@ shinyServer(function(input, output) {
 
     output$YLDPlot <- renderPlot({
         comparitiveRisk <- comparitiveRisk()
-        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
         plotBurden(comparitiveRisk$yld.delta, varName = "YLD")
-        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
-        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
     })
 
     output$DALYPlot <- renderPlot({
         comparitiveRisk <- comparitiveRisk()
-        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
         plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
-        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
-        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
     })
 
     output$DeathsPlot <- renderPlot({
         comparitiveRisk <- comparitiveRisk()
-        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
         plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
-        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
-        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
     })
 
     data <- reactive({
         CR <- comparitiveRisk()
-        data.frame(CR$AF)
+        with(CR, data.frame(dproj.delta = dproj.delta, daly.delta = daly.delta, yll.delta = yll.delta, yld.delta = yld.delta))
     })
 
-    output$values <- renderTable({
+    output$BurdenTable <- renderTable({
         data()
     })
 })
