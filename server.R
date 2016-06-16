@@ -6,15 +6,17 @@ library(reshape2)
 
 shinyServer(function(input, output) {
 
-    parameters <- createParameterList(baseline = TRUE)
+    ITHIM.baseline <- reactive({
+    parameters <- createParameterList(vision = "baseline", region = input$region)
     means <- computeMeanMatrices(parameters)
     quintiles <- getQuintiles(means)
-    ITHIM.baseline  <- list( parameters = parameters, means = means, quintiles = quintiles )
+    list( parameters = parameters, means = means, quintiles = quintiles )
+    })
 
 
 #    ITHIM.baseline <- list( parameters = parameters ) #, means = means, quintiles = quintiles )
     ITHIM.scenario <- reactive({
-        parameters <- createParameterList(baseline = FALSE)
+        parameters <- createParameterList(vision = "scenario", region = input$region)
         parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
         parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
         parameters <- setParameter(parName="muws", parValue = input$muws, parList = parameters)
@@ -25,17 +27,48 @@ shinyServer(function(input, output) {
 
     comparitiveRisk <- reactive({
         ITHIM.scenario <- ITHIM.scenario()
+        ITHIM.baseline <- ITHIM.baseline()
         compareModels(ITHIM.baseline,ITHIM.scenario)
     })
 
     output$ITHIMPlot <- renderPlot({
         comparitiveRisk <- comparitiveRisk()
-        plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.7, 1))+ggtitle(as.character(input$variable))
+        plotRR(comparitiveRisk$RR.baseline[[input$variable]],comparitiveRisk$RR.scenario[[input$variable]]) + coord_cartesian(ylim = c(0.5, 1))+ggtitle(as.character(input$variable))
     })
 
     output$MeanPlot <- renderPlot({
         ITHIM.scenario <- ITHIM.scenario()
+        ITHIM.baseline <- ITHIM.baseline()
         plotMean(ITHIM.baseline$means,ITHIM.scenario$means, var = "meanWalkTime") + ggtitle("Mean Walking Time") + coord_cartesian(ylim = c(0, 240))
+    })
+
+    output$YLLPlot <- renderPlot({
+        comparitiveRisk <- comparitiveRisk()
+        plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
+    })
+
+    output$YLDPlot <- renderPlot({
+        comparitiveRisk <- comparitiveRisk()
+        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
+        plotBurden(comparitiveRisk$yld.delta, varName = "YLD")
+        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
+        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
+    })
+
+    output$DALYPlot <- renderPlot({
+        comparitiveRisk <- comparitiveRisk()
+        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
+        plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
+        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
+        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
+    })
+
+    output$DeathsPlot <- renderPlot({
+        comparitiveRisk <- comparitiveRisk()
+        #plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
+        plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
+        #plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
+        #plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
     })
 
     data <- reactive({
