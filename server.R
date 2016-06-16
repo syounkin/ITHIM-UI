@@ -9,7 +9,7 @@ shinyServer(function(input, output) {
     ITHIM.baseline <- reactive({
     parameters <- createParameterList(vision = "baseline", region = input$region)
     means <- computeMeanMatrices(parameters)
-    quintiles <- getQuintiles(means)
+    quintiles <- getQuintiles(means, region = input$region)
     list( parameters = parameters, means = means, quintiles = quintiles )
     })
 
@@ -18,7 +18,7 @@ shinyServer(function(input, output) {
         parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
         parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
         means <- computeMeanMatrices(parameters)
-        quintiles <- getQuintiles(means)
+        quintiles <- getQuintiles(means, region = input$region)
         ITHIM.scenario  <- list( parameters = parameters, means = means, quintiles = quintiles )
     })
 
