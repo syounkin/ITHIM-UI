@@ -25,7 +25,7 @@ shinyServer(function(input, output) {
     comparitiveRisk <- reactive({
         ITHIM.scenario <- ITHIM.scenario()
         ITHIM.baseline <- ITHIM.baseline()
-        compareModels(ITHIM.baseline,ITHIM.scenario)
+        compareModels(ITHIM.baseline, ITHIM.scenario, region = input$region)
     })
 
     output$ITHIMPlot <- renderPlot({

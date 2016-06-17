@@ -6,12 +6,12 @@ headerPanel("ITHIM"),
 
 sidebarPanel(
     sliderInput("muwt", "Mean Walking Time (min per week):",
-                min=47.3900, max=120, value=57.7778),
+                min=57.8, max=120, value=57.8),
     sliderInput("muct", "Mean Cycling Time (min per week):",
-                min=6.1600, max=120, value=46.7647),
+                min=3.0, max=300, value=200.5),
     radioButtons("region", "Region:",
-                 c("National"="national", "Also National"="national"),
-                 inline = TRUE, selected = "national", width = '100%'),
+                 c("Bay Area"="SFBayArea", "National"="national"),
+                 inline = TRUE, selected = "SFBayArea", width = '100%'),
     width = 2),
 
 mainPanel(
