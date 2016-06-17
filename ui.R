@@ -20,7 +20,10 @@ mainPanel(
         tabPanel("DALY", plotOutput("DALYPlot",height="400px")),
         tabPanel("YLD", plotOutput("YLDPlot",height="400px")),
         tabPanel("YLL", plotOutput("YLLPlot",height="400px")),
-        tabPanel("Table", tableOutput("BurdenTable")),
+        tabPanel("Deaths Summary", tableOutput("DeathsTable")),
+        tabPanel("DALY Summary", tableOutput("DALYTable")),
+        tabPanel("YLD Summary", tableOutput("YLDTable")),
+        tabPanel("YLL Summary", tableOutput("YLLTable")),
         type = "pills"
     )
 )

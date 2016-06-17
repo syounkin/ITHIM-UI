@@ -59,12 +59,36 @@ shinyServer(function(input, output) {
         plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
     })
 
-    data <- reactive({
+    deaths <- reactive({
         CR <- comparitiveRisk()
-        with(CR, data.frame(dproj.delta = dproj.delta, daly.delta = daly.delta, yll.delta = yll.delta, yld.delta = yld.delta))
+        matrix(unlist(lapply(CR$dproj.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
     })
 
-    output$BurdenTable <- renderTable({
-        data()
+    daly <- reactive({
+        CR <- comparitiveRisk()
+        matrix(unlist(lapply(CR$daly.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    })
+
+    yll <- reactive({
+        CR <- comparitiveRisk()
+        matrix(unlist(lapply(CR$yll.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    })
+
+    yld <- reactive({
+        CR <- comparitiveRisk()
+        matrix(unlist(lapply(CR$yld.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    })
+
+    output$DeathsTable <- renderTable({
+        deaths()
+    })
+    output$DALYTable <- renderTable({
+        daly()
+    })
+    output$YLLTable <- renderTable({
+        yll()
+    })
+    output$YLDTable <- renderTable({
+        yld()
     })
 })
