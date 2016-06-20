@@ -4,7 +4,7 @@ install_github("syounkin/ITHIM")
 library("ITHIM")
 runGitHub( "ITHIM-UI", "syounkin")
 
-
+library("shiny")
 library("devtools")
 install("~/ITHIM/")
-runApp
+runApp("~/ITHIM-UI/")
