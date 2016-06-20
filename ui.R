@@ -1,45 +1,39 @@
 library(shiny)
 
-# Define UI for miles per gallon application
 shinyUI(pageWithSidebar(
 
-  # Application title
-  headerPanel("ITHIM"),
+headerPanel("ITHIM"),
 
-  # Sidebar with controls to select the variable to plot against mpg
-  # and to specify whether outliers should be included
-  sidebarPanel(
-    selectInput("variable", "Variable:",
-                list("Depression" = "Depression",
-                     "Dementia" = "Dementia",
-                     "BreastCancer" = "BreastCancer",
-                     "ColonCancer" = "ColonCancer",
-                     "CVD" = "CVD",
-                     "Diabetes" = "Diabetes")),
+sidebarPanel(
     sliderInput("muwt", "Mean Walking Time (min per week):",
-                min=55, max=200, value=107),
+                min=57.8, max=120, value=57.8),
     sliderInput("muct", "Mean Cycling Time (min per week):",
-                min=10, max=200, value=39),
-    sliderInput("muws", "Mean Walking Speed (mph):",
-                min=2.7, max=5, value=2.8)
-    #checkboxInput("outliers", "Show outliers", FALSE)
-  ),
-
-  # Show the caption and plot of the requested variable against mpg
-  ## mainPanel(
-  ##   h3(textOutput("variable")),
-
-  ##   #plotOutput("ITHIMPlot"),
-  ##   tableOutput("values")
-  ## )
+                min=3.0, max=300, value=200.5),
+    radioButtons("region", "Region:",
+                 c("Bay Area"="SFBayArea", "National"="national"),
+                 inline = TRUE, selected = "SFBayArea", width = '100%'),
+    width = 2),
 
 mainPanel(
-        tabsetPanel(
-            tabPanel("R.R.", plotOutput("ITHIMPlot",height="800px")),
-            tabPanel("Means", plotOutput("MeanPlot",height="800px")),
-#                  tabPanel("Summary", verbatimTextOutput("summary")),
-                  tabPanel("A.F.", tableOutput("values"))
-                )
-      )
+    tabsetPanel(
+        tabPanel("Deaths", plotOutput("DeathsPlot",height="400px")),
+        tabPanel("DALY", plotOutput("DALYPlot",height="400px")),
+        tabPanel("YLD", plotOutput("YLDPlot",height="400px")),
+        tabPanel("YLL", plotOutput("YLLPlot",height="400px")),
+        tabPanel("Deaths Summary", tableOutput("DeathsTable")),
+        tabPanel("DALY Summary", tableOutput("DALYTable")),
+        tabPanel("YLD Summary", tableOutput("YLDTable")),
+        tabPanel("YLL Summary", tableOutput("YLLTable")),
+        type = "pills"
+    )
+)
 
 ))
+
+## selectInput("variable", "Variable:",
+##             list("Depression" = "Depression",
+##                  "Dementia" = "Dementia",
+##                  "BreastCancer" = "BreastCancer",
+##                  "ColonCancer" = "ColonCancer",
+##                  "CVD" = "CVD",
+##                  "Diabetes" = "Diabetes")),

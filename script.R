@@ -1,10 +1,9 @@
-library("shiny")
-library("devtools")
-install_github("syounkin/ITHIM")
-library("ITHIM")
-runGitHub( "ITHIM-UI", "syounkin")
-
-library("shiny")
-library("devtools")
-install("~/ITHIM/")
+#library("shiny");library("devtools");
+#install_github("syounkin/ITHIM")
+library("shiny");library("devtools")
+install("~/ITHIM/");library("ITHIM");
 runApp("~/ITHIM-UI/")
+#install_github("syounkin/ITHIM", ref = "devel")
+#library("ITHIM")
+#runGitHub( "ITHIM-UI", "syounkin")
+#runGitHub( "ITHIM-UI", "syounkin", ref = "devel")
