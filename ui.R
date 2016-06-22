@@ -4,6 +4,10 @@ shinyUI(pageWithSidebar(
 
 headerPanel("ITHIM"),
 
+## we should also think about how to allow for all the results of selected scenario to be downloaded as CSV
+## I think users will be interested in seeing a scenario against baseline or a scenario against another so may think about duplicating 
+## the current display to show the results of two runs side by side or atop one another
+ 
 sidebarPanel(
    # can we add a break and second line here to re-state what walking time is or provide an example (like "60 min/wk = x# y min walking trips/wk)
    sliderInput("muwt", "Mean Walking Time (min per week):",
