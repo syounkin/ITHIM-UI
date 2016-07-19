@@ -91,4 +91,4 @@ shinyServer(function(input, output) {
     output$YLDTable <- renderTable({
         yld()
     })
-¯¯})
+})
