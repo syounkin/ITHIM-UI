@@ -6,20 +6,11 @@ library(reshape2)
 
 shinyServer(function(input, output) {
 
-    ITHIM.baseline <- reactive({
-    parameters <- createParameterList(vision = "baseline", region = input$region)
-    means <- computeMeanMatrices(parameters)
-    quintiles <- getQuintiles(means, parameters)
-    list( parameters = parameters, means = means, quintiles = quintiles )
-    })
-
+    ITHIM.baseline <- createITHIM()
+        
     ITHIM.scenario <- reactive({
-        parameters <- createParameterList(vision = "scenario", region = input$region)
-        parameters <- setParameter(parName="muwt", parValue = input$muwt, parList = parameters)
-        parameters <- setParameter(parName="muct", parValue = input$muct, parList = parameters)
-        means <- computeMeanMatrices(parameters)
-        quintiles <- getQuintiles(means, parameters)
-        ITHIM.scenario  <- list( parameters = parameters, means = means, quintiles = quintiles )
+        updateITHIM(ITHIM.baseline, "muwt", input$muwt)
+        updateITHIM(ITHIM.baseline, "muct", input$muct)
     })
 
     comparitiveRisk <- reactive({

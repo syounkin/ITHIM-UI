@@ -2,7 +2,7 @@ library(shiny)
 
 shinyUI(pageWithSidebar(
 
-headerPanel("ITHIM"),
+headerPanel("Simple Implementation of the ITHIM Tool for US Metropolitan Counties"),
 
 ## we should also think about how to allow for all the results of selected scenario to be downloaded as CSV
 ## I think users will be interested in seeing a scenario against baseline or a scenario against another so may think about duplicating 
@@ -11,13 +11,10 @@ headerPanel("ITHIM"),
 sidebarPanel(
    # can we add a break and second line here to re-state what walking time is or provide an example (like "60 min/wk = x# y min walking trips/wk)
    sliderInput("muwt", "Mean Walking Time (min per week):",
-                min=57.8, max=120, value=57.8),
+                min=20, max=100, value=47.49),
     # ditto cycling, may want to rethink the inputs so that a user could change average walking trip length and average number of trips/week
     sliderInput("muct", "Mean Cycling Time (min per week):",
-                min=3.0, max=300, value=200.5),
-    radioButtons("region", "Region:",
-                 c("Bay Area"="SFBayArea", "National"="national"),
-                 inline = TRUE, selected = "SFBayArea", width = '100%'),
+                min=0, max=15, value=6.16),
     width = 2),
 
 mainPanel(
