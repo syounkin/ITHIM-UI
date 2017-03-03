@@ -1,3 +1,4 @@
+
 library(shiny)
 #library(datasets)
 library(ITHIM)
@@ -9,13 +10,12 @@ shinyServer(function(input, output) {
     ITHIM.baseline <- createITHIM()
         
     ITHIM.scenario <- reactive({
-        updateITHIM(ITHIM.baseline, "muwt", input$muwt)
-        updateITHIM(ITHIM.baseline, "muct", input$muct)
+        update(ITHIM.baseline, list(muwt = input$muwt, muct = input$muct))
     })
 
     comparitiveRisk <- reactive({
         ITHIM.scenario <- ITHIM.scenario()
-        ITHIM.baseline <- ITHIM.baseline()
+        ITHIM.baseline <- ITHIM.baseline
         compareModels(ITHIM.baseline, ITHIM.scenario)
     })
 
@@ -30,56 +30,56 @@ shinyServer(function(input, output) {
         plotMean(ITHIM.baseline$means,ITHIM.scenario$means, var = "meanWalkTime") + ggtitle("Mean Walking Time") + coord_cartesian(ylim = c(0, 240))
     })
 
-    output$YLLPlot <- renderPlot({
-        comparitiveRisk <- comparitiveRisk()
-        plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
-    })
+    ## output$YLLPlot <- renderPlot({
+    ##     comparitiveRisk <- comparitiveRisk()
+    ##     plotBurden(comparitiveRisk$yll.delta, varName = "YLL")
+    ## })
 
-    output$YLDPlot <- renderPlot({
-        comparitiveRisk <- comparitiveRisk()
-        plotBurden(comparitiveRisk$yld.delta, varName = "YLD")
-    })
+    ## output$YLDPlot <- renderPlot({
+    ##     comparitiveRisk <- comparitiveRisk()
+    ##     plotBurden(comparitiveRisk$yld.delta, varName = "YLD")
+    ## })
 
-    output$DALYPlot <- renderPlot({
-        comparitiveRisk <- comparitiveRisk()
-        plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
-    })
+    ## output$DALYPlot <- renderPlot({
+    ##     comparitiveRisk <- comparitiveRisk()
+    ##     plotBurden(comparitiveRisk$daly.delta, varName = "DALY")
+    ## })
 
-    output$DeathsPlot <- renderPlot({
-        comparitiveRisk <- comparitiveRisk()
-        plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
-    })
+    ## output$DeathsPlot <- renderPlot({
+    ##     comparitiveRisk <- comparitiveRisk()
+    ##     plotBurden(comparitiveRisk$dproj.delta, varName = "Deaths")
+    ## })
 
-    deaths <- reactive({
-        CR <- comparitiveRisk()
-        matrix(unlist(lapply(CR$dproj.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
-    })
+    ## deaths <- reactive({
+    ##     CR <- comparitiveRisk()
+    ##     matrix(unlist(lapply(CR$dproj.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    ## })
 
-    daly <- reactive({
-        CR <- comparitiveRisk()
-        matrix(unlist(lapply(CR$daly.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
-    })
+    ## daly <- reactive({
+    ##     CR <- comparitiveRisk()
+    ##     matrix(unlist(lapply(CR$daly.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    ## })
 
-    yll <- reactive({
-        CR <- comparitiveRisk()
-        matrix(unlist(lapply(CR$yll.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
-    })
+    ## yll <- reactive({
+    ##     CR <- comparitiveRisk()
+    ##     matrix(unlist(lapply(CR$yll.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    ## })
 
-    yld <- reactive({
-        CR <- comparitiveRisk()
-        matrix(unlist(lapply(CR$yld.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
-    })
+    ## yld <- reactive({
+    ##     CR <- comparitiveRisk()
+    ##     matrix(unlist(lapply(CR$yld.delta,function(x) lapply(x, function(x) sum(x[-(1:2)]) ))),nrow=5,ncol=2,byrow=TRUE,dimnames=list(names(CR$dproj.delta),c("M","F")))
+    ## })
 
-    output$DeathsTable <- renderTable({
-        deaths()
-    })
-    output$DALYTable <- renderTable({
-        daly()
-    })
-    output$YLLTable <- renderTable({
-        yll()
-    })
-    output$YLDTable <- renderTable({
-        yld()
-    })
+    ## output$DeathsTable <- renderTable({
+    ##     deaths()
+    ## })
+    ## output$DALYTable <- renderTable({
+    ##     daly()
+    ## })
+    ## output$YLLTable <- renderTable({
+    ##     yll()
+    ## })
+    ## output$YLDTable <- renderTable({
+    ##     yld()
+    ## })
 })
